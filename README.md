@@ -110,19 +110,19 @@ El programa ofrece diversas funcionalidades accesibles desde un menú principal.
 
 ### Módulos del Proyecto
 
-aes_cipher.py
+* aes_cipher.py
     Contiene funciones para generar una clave AES a partir de una contraseña y una sal. También incluye funciones para cifrar y descifrar mensajes utilizando el algoritmo AES.
 
-rsa_cipher.py
+* rsa_cipher.py
     Implementa la generación de claves RSA y permite cifrar y descifrar mensajes mediante RSA.
 
-digital_signature.py
+* digital_signature.py
     Permite firmar mensajes utilizando RSA y verificar la firma de los mensajes, asegurando la autenticidad.
 
-utils.py
+* utils.py
     Incluye una función para generar un hash SHA-256 del mensaje, útil para integridad y autenticidad de los mensajes.
 
-main.py
+* main.py
     Archivo principal que gestiona el flujo del programa, con un menú de opciones que permite cifrar, descifrar, guardar y listar archivos cifrados.
 
 ### Manejo de Errores:
