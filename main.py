@@ -56,9 +56,6 @@ def descifrar_desde_archivo():
         print("Entrada inválida.")
         return
     
-    # Solicitar la contraseña para descifrar
-    password = input("Ingrese la contraseña para descifrar AES: ")
-
     # Leer el archivo y extraer los datos
     with open(ruta_archivo, "rb") as file:
         contenido = file.read()
@@ -66,10 +63,22 @@ def descifrar_desde_archivo():
         iv = contenido[16:32]
         mensaje_cifrado_aes = contenido[32:]
 
-    # Generar clave AES y descifrar el mensaje
-    clave_aes = generar_clave_aes(password, salt)
-    mensaje_descifrado_aes = descifrar_aes(iv, mensaje_cifrado_aes, clave_aes)
-    print(f"\nMensaje descifrado: {mensaje_descifrado_aes.decode()}")
+    intentos = 2  # Número de intentos permitidos para ingresar la contraseña
+    while intentos > 0:
+        password = input("Ingrese la contraseña para descifrar AES: ")
+        clave_aes = generar_clave_aes(password, salt)
+        
+        try:
+            # Intentar descifrar el mensaje
+            mensaje_descifrado_aes = descifrar_aes(iv, mensaje_cifrado_aes, clave_aes)
+            print(f"\nMensaje descifrado: {mensaje_descifrado_aes.decode()}")
+            return  # Salir de la función si el descifrado es exitoso
+        except Exception:
+            intentos -= 1
+            if intentos > 0:
+                print("Contraseña incorrecta. Inténtelo de nuevo.")
+            else:
+                print("Contraseña incorrecta.")
 
 def cifrar_terminal():
     # Solicitar el mensaje y la contraseña
@@ -91,20 +100,35 @@ def descifrar_terminal(salt, iv, mensaje_cifrado_aes, password):
     print(f"\nMensaje descifrado: {mensaje_descifrado_aes.decode()}")
 
 def main():
-    opcion = input("¿Qué desea hacer? (1: Cifrar y Guardar en Archivo, 2: Descifrar desde Archivo, 3: Cifrar y Descifrar en Terminal): ")
-    
-    if opcion == "1":
-        cifrar_y_guardar()
-    elif opcion == "2":
-        descifrar_desde_archivo()
-    elif opcion == "3":
-        # Cifrado y Descifrado en Terminal
-        salt, iv, mensaje_cifrado_aes, password = cifrar_terminal()
-        # Confirmar si desea descifrar en la terminal
-        if input("\n¿Desea descifrar el mensaje en la terminal ahora? (s/n): ").lower() == 's':
-            descifrar_terminal(salt, iv, mensaje_cifrado_aes, password)
-    else:
-        print("Opción no válida.")
+    while True:
+        print("\nOpciones disponibles:")
+        print("1: Cifrar y Guardar en Archivo")
+        print("2: Descifrar desde Archivo")
+        print("3: Cifrar y Descifrar en Terminal")
+        print("4: Salir")
+
+        opcion = input("Seleccione una opción: ")
+        
+        if opcion == "1":
+            cifrar_y_guardar()
+        elif opcion == "2":
+            descifrar_desde_archivo()
+        elif opcion == "3":
+            # Cifrado y Descifrado en Terminal
+            salt, iv, mensaje_cifrado_aes, password = cifrar_terminal()
+            if input("\n¿Desea descifrar el mensaje en la terminal ahora? (s/n): ").lower() == 's':
+                descifrar_terminal(salt, iv, mensaje_cifrado_aes, password)
+        elif opcion == "4":
+            print("Saliendo del programa.")
+            break
+        else:
+            print("Opción no válida.")
+
+        # Preguntar si desea realizar otra operación
+        continuar = input("\n¿Desea realizar otra operación? (s/n): ").lower()
+        if continuar != 's':
+            print("Saliendo del programa.")
+            break
 
 if __name__ == "__main__":
     main()
